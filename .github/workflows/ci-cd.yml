@@ -72,8 +72,7 @@ jobs:
     needs: continuous-inspection
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     permissions:
-      contents: read
-      packages: write
+      contents: write
 
     steps:
       - name: Checkout Code
@@ -85,9 +84,6 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: maven
-          server-id: github
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_PASSWORD
 
       - name: Build Package (JAR)
         run: mvn -B package -DskipTests
@@ -99,8 +95,21 @@ jobs:
           path: target/*.jar
           retention-days: 7
 
-      - name: Publish Package to GitHub Packages
-        run: mvn --batch-mode deploy -DskipTests
-        env:
-          MAVEN_USERNAME: ${{ github.actor }}
-          MAVEN_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0
+          name: "FoodFrenzy v1.0.0"
+          body: |
+            ## FoodFrenzy Release v1.0.0
+
+            Automated release dari CI/CD Pipeline.
+
+            ### Cara Menjalankan
+            ```bash
+            java -jar FoodFrenzy-1.0.0-exec.jar
+            ```
+          files: |
+            target/FoodFrenzy-*.jar
+          draft: false
+          prerelease: false
