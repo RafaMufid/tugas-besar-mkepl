@@ -37,6 +37,7 @@ jobs:
           name: jacoco-report
           path: target/site/jacoco
 
+          
   continuous-inspection:
     name: Continuous Inspection
     runs-on: ubuntu-latest
