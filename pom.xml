@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>io.github.rafamufid</groupId>
 	<artifactId>FoodFrenzy</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<name>FoodFrenzy</name>
 	<description>FoodFrenzy using Spring Boot and Thymeleaf</description>
 	<properties>
