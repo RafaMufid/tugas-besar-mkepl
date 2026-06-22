@@ -8,8 +8,8 @@ on:
 
 jobs:
 
-  continuous-testing:
-    name: Continuous Testing
+  build:
+    name: Build Project
     runs-on: ubuntu-latest
 
     steps:
@@ -23,8 +23,50 @@ jobs:
           java-version: '17'
           cache: maven
 
+      - name: Compile Project
+        run: mvn clean compile
+
+  continuous-testing:
+    name: Continuous Testing
+    needs: build
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: foodfrenzy
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Wait for MySQL
+        run: |
+          echo "Waiting for MySQL..."
+          sleep 20
+
       - name: Run Unit Tests
-        run: mvn clean test
+        run: mvn test
+        env:
+          SPRING_DATASOURCE_URL: jdbc:mysql://127.0.0.1:3306/foodfrenzy
+          SPRING_DATASOURCE_USERNAME: root
+          SPRING_DATASOURCE_PASSWORD: root
 
       - name: Generate JaCoCo Coverage
         run: mvn jacoco:report
