@@ -98,7 +98,7 @@ public class ProductServiceTest {
 
     @Test
     void testGetProductByName() {
-        when(productRepository.findByPname("Burger")).thenReturn(product2);
+        when(productRepository.findByPname("Burger")).thenReturn(product1);
 
         Product found = productService.getProductByName("Burger");
 
