@@ -40,9 +40,9 @@ public class UserServiceTest {
 
         user2 = new User();
         user2.setU_id(2);
-        user2.setUname("Jane Doe");
-        user2.setUemail("jane@example.com");
-        user2.setUpassword("securepass");
+        user2.setUname("Raihan");
+        user2.setUemail("raihan123");
+        user2.setUpassword("12345");
     }
 
     @Test
