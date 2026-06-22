@@ -24,13 +24,10 @@ import com.example.demo.FoodFrenzyApplication;
 import com.example.demo.entities.Product;
 import com.example.demo.repositories.ProductRepository;
 
-@SpringBootTest(
-    classes = FoodFrenzyApplication.class,
-    properties = {
+@SpringBootTest(classes = FoodFrenzyApplication.class, properties = {
         "spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect",
         "spring.jpa.hibernate.ddl-auto=none"
-    }
-)
+})
 @Import(ProductIntegrationTest.TestDbConfig.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class ProductIntegrationTest {
@@ -69,17 +66,15 @@ public class ProductIntegrationTest {
 
     @Test
     void testAddAndGetProductFlow() throws Exception {
-        // 1. Add product
         mockMvc.perform(post("/addingProduct")
-                        .param("pname", "Super Burger")
-                        .param("pprice", "12.99")
-                        .param("pdescription", "Super delicious burger"))
+                .param("pname", "Super Burger")
+                .param("pprice", "12.99")
+                .param("pdescription", "Super delicious burger"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/services"));
 
         verify(productRepository, times(1)).save(any(Product.class));
 
-        // 2. Mock finding product
         Product product = new Product();
         product.setPid(1);
         product.setPname("Super Burger");
